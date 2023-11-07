@@ -42,5 +42,8 @@ jobs:
           git config --global user.name "Developer Metrics Automation"
 
           git add .
-          git commit -m "auto-update: Update TypeScript migration statistics"
+
+          # Only commit if there are changes
+          git diff-index --quiet HEAD -- || git commit -m "auto-update: Update TypeScript migration statistics"
+
           git push
