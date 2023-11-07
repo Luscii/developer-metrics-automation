@@ -1,0 +1,33 @@
+name: Scheduled metrics update
+
+on:
+  workflow_dispatch:
+  schedule:
+    # Runs at the first minute of every hour (see https://crontab.guru)
+    - cron: "0 * * * *"
+jobs:
+  typescript-vs-javascript-files:
+    name: Update statistics on JavaScript to TypeScript migration
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout metrics repo (this repo)
+        uses: actions/checkout@v4
+        with:
+          path: metrics
+
+      - name: Checkout Vitals repo
+        uses: actions/checkout@v4
+        with:
+          repository: Luscii/cVitals-Web
+          path: repos/vitals
+          token: ${{ secrets.CI_GITHUB_TOKEN }}
+          fetch-depth: 1
+      - run: |
+          TS=$(find repos/vitals/src -name "*.ts" -o -name "*.tsx" | wc -l | xargs)
+          JS=$(find repos/vitals/src -name "*.js" -o -name "*.jsx" | wc -l | xargs)
+          TOTAL=$(expr $TS + $JS)
+
+          echo "{ \"typescript\": $TS, \"javascript\": $JS, \"total\": $TOTAL }" > typescript-migration.json
+          git add .
+          git commit -m "auto-update: update JavaScript to TypeScript migration stats"
+          git push
