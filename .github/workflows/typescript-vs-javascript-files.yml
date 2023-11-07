@@ -13,27 +13,31 @@ jobs:
       - name: Checkout metrics repo (this repo)
         uses: actions/checkout@v4
         with:
-          path: metrics
+          path: REPOS/metrics
 
       - name: Checkout Vitals repo
         uses: actions/checkout@v4
         with:
           repository: Luscii/cVitals-Web
-          path: repos/vitals
+          ref: test
+          path: REPOS/vitals
           token: ${{ secrets.CI_GITHUB_TOKEN }}
           fetch-depth: 1
 
       - name: Collect metrics
         shell: bash
         run: |
-          TS=$(find repos/vitals/src -name "*.ts" -o -name "*.tsx" | wc -l | xargs)
-          JS=$(find repos/vitals/src -name "*.js" -o -name "*.jsx" | wc -l | xargs)
+          TS=$(find REPOS/vitals/src -name "*.ts" -o -name "*.tsx" | wc -l | xargs)
+          JS=$(find REPOS/vitals/src -name "*.js" -o -name "*.jsx" | wc -l | xargs)
           TOTAL=$(expr $TS + $JS)
 
-          echo "{ \"typescript\": $TS, \"javascript\": $JS, \"total\": $TOTAL }" > ../../typescript-migration.json
+          echo "{ \"typescript\": $TS, \"javascript\": $JS, \"total\": $TOTAL }" > REPOS/metrics/typescript-migration.json
 
       - name: Commit results
         shell: bash
         run: |
-          git commit -am "auto-update: Update TypeScript migration statistics"
+          cd REPOS/metrics
+
+          git add .
+          git commit -m "auto-update: Update TypeScript migration statistics"
           git push
