@@ -38,6 +38,9 @@ jobs:
         run: |
           cd REPOS/metrics
 
+          git config --global user.email "developer-metrics-automation@no-reply.com"
+          git config --global user.name "Developer Metrics Automation"
+
           git add .
           git commit -m "auto-update: Update TypeScript migration statistics"
           git push
