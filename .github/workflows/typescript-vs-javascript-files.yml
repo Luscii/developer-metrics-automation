@@ -31,7 +31,7 @@ jobs:
           JS=$(find REPOS/vitals/src -name "*.js" -o -name "*.jsx" | wc -l | xargs)
           TOTAL=$(expr $TS + $JS)
 
-          echo "{ \"typescript\": $TS, \"javascript\": $JS, \"total\": $TOTAL }" > REPOS/metrics/typescript-migration.json
+          echo "{ \"typescript\": $TS, \"javascript\": $JS, \"total\": $TOTAL }" | jq > REPOS/metrics/typescript-migration.json
 
       - name: Commit results
         shell: bash
