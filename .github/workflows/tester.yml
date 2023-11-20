@@ -8,3 +8,12 @@ jobs:
     steps:
       - name: Log the tag
         run: echo "The tag is ${{ github.ref_name }}"
+
+      - name: Declare some variables
+        shell: bash
+        run: |
+          echo "SHA_SHORT=$(git rev-parse --short "$GITHUB_SHA")" >> "$GITHUB_ENV"
+
+      - name: Echo string with variable
+        shell: bash
+        run: echo v0.0.0-alpha.${{ env.SHA_SHORT }}
