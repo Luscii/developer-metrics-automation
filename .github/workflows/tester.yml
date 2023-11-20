@@ -6,6 +6,11 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.CI_GITHUB_TOKEN }}
+
       - name: Log the tag
         run: echo "The tag is ${{ github.ref_name }}"
 
